@@ -149,10 +149,12 @@ void DrawStar(HDC hdc, int centerX, int centerY, int minorRadius, int majorRadiu
     }
 }
 
-void DrawStar(HDC hdc, int centerX, int centerY, int minorRadius, int majorRadius, int* picksCountArray, int generationsCount, int picksVariationsCount, int pickID)
+void DrawStarInderectRecursion1(HDC hdc, int centerX, int centerY, int minorRadius, int majorRadius, int picksCount, float decreaseCoefficient, int generationsCount);
+void DrawStarInderectRecursion2(HDC hdc, int centerX, int centerY, int minorRadius, int majorRadius, int picksCount, float decreaseCoefficient, int generationsCount);
+
+
+void DrawStarInderectRecursion1(HDC hdc, int centerX, int centerY, int minorRadius, int majorRadius, int picksCount, float decreaseCoefficient, int generationsCount)
 {
-    pickID = pickID % picksVariationsCount;
-    int picksCount = picksCountArray[pickID];
     DrawStar(hdc, centerX, centerY, minorRadius, majorRadius, picksCount);
 
     if (generationsCount > 0)
@@ -170,9 +172,32 @@ void DrawStar(HDC hdc, int centerX, int centerY, int minorRadius, int majorRadiu
             }
 
         }
-        pickID++;
         for (int i = 1; i < verticesCount; i += 2)
-            DrawStar(hdc, pos[i].x, pos[i].y, minorRadius * 0.5f, majorRadius * 0.5f, picksCountArray, generationsCount - 1, picksVariationsCount, pickID);
+            DrawStarInderectRecursion2(hdc, pos[i].x, pos[i].y, minorRadius * decreaseCoefficient, majorRadius * decreaseCoefficient, picksCount - 1, decreaseCoefficient, generationsCount - 1);
+    }
+}
+
+void DrawStarInderectRecursion2(HDC hdc, int centerX, int centerY, int minorRadius, int majorRadius, int picksCount, float decreaseCoefficient, int generationsCount)
+{
+    DrawStar(hdc, centerX, centerY, minorRadius, majorRadius, picksCount);
+
+    if (generationsCount > 0)
+    {
+        float verticesCount = picksCount * 2;
+        float2* pos = new float2[verticesCount];
+
+        for (int i = 0; i < verticesCount; i++)
+        {
+            if (i % 2 == 1)
+            {
+                float alpha = ((float)i / verticesCount) * 2.0f * PI;
+                pos[i].x = centerX + cos(alpha) * majorRadius;
+                pos[i].y = centerY + sin(alpha) * majorRadius;
+            }
+
+        }
+        for (int i = 1; i < verticesCount; i += 2)
+            DrawStarInderectRecursion1(hdc, pos[i].x, pos[i].y, minorRadius * decreaseCoefficient, majorRadius * decreaseCoefficient, picksCount + 1, decreaseCoefficient, generationsCount - 1);
     }
 }
 
@@ -207,9 +232,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             int width = clientRect.right - clientRect.left;
             int height = clientRect.bottom - clientRect.top;
 
-            int picksCount[] = {5, 4};
-            DrawStar(hdc, width / 2.0, height / 2.0f, 100, 200, picksCount, 5, sizeof(picksCount) / sizeof(int), 0);
-            
+            //int picksCount[] = {5, 4};
+            //DrawStar(hdc, width / 2.0, height / 2.0f, 100, 200, picksCount, 5, sizeof(picksCount) / sizeof(int), 0);
+            DrawStarInderectRecursion1(hdc, width / 2.0, height / 2.0f, 100, 200, 5, 0.3f, 4);
             EndPaint(hWnd, &ps);
         }
         break;
