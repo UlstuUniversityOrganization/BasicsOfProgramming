@@ -142,7 +142,6 @@ void DrawStar(HDC hdc, int centerX, int centerY, int minorRadius, int majorRadiu
                 pos[i].x = centerX + cos(alpha) * majorRadius;
                 pos[i].y = centerY + sin(alpha) * majorRadius;
             }
-
         }
         for (int i = 1; i < verticesCount; i += 2)
             DrawStar(hdc, pos[i].x, pos[i].y, minorRadius * 0.3f, majorRadius * 0.3f, picksCount, generationsCount - 1);
