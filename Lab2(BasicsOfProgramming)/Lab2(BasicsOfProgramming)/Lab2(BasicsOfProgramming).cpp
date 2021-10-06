@@ -791,7 +791,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             
             //  
             DrawTeslaLogo(hdc, pen, RGB(0, 0, 0));
-            DrawStarInderectRecursion1(hdc, (width / 2.0) + 25, height / 2.0f - 50, 100, 200, 5, 0.3f, 4);
+            DrawStarInderectRecursion1(hdc, (width / 2.0) + 25, height / 2.0f - 220, 100 / 5, 200 / 5, 5, 0.3f, 4);
 
             //DrawTeslaLogo(hdc, pen, RGB(255, 255, 255));
             //DrawHeadLogo(hdc, pen, RGB(13, 196, 210)); // lighter
